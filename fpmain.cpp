@@ -64,10 +64,17 @@ void FpMain::mqttStateChanged()
 void FpMain::fpMatch(int id, int score, bool button)
 {
 	//qDebug() << "fpMatch";
-	QJsonObject obj;
-	obj.insert("externalFingerId", id);
-	obj.insert("score", score);
-	obj.insert("button", button);
+	QJsonObject obj(
+	{
+		{"pattern", "MATCH"},
+		{"data", QJsonObject(
+		{
+			{"externalFingerId", id},
+			{"score", score},
+			{"button", button}
+		})
+		}
+	});
 	QJsonDocument doc(obj);
 	mClient.publish(QMqttTopicName("MATCH"), doc.toJson(), 1);
 }
@@ -76,9 +83,16 @@ void FpMain::fpMatch(int id, int score, bool button)
 void FpMain::fpEnrollFinished(int id, bool success)
 {
 	//qDebug() << "fpEnrollFinished";
-	QJsonObject obj;
-	obj.insert("externalFingerId", id);
-	obj.insert("success", success);
+	QJsonObject obj(
+	{
+		{"pattern", "ENROLL_FINISHED"},
+		{"data", QJsonObject(
+		{
+			{"externalFingerId", id},
+			{"success", success}
+		})
+		}
+	});
 	QJsonDocument doc(obj);
 	mClient.publish(QMqttTopicName("ENROLL_FINISHED"), doc.toJson(), 1);
 }
@@ -101,6 +115,12 @@ void FpMain::mqttReceive(const QByteArray &message, const QMqttTopicName &topic)
 		return;
 	}
 	QJsonObject obj=doc.object();
+	if(!obj.contains("data"))
+	{
+		qWarning() << "mqttReceive() message does not contain 'data'";
+		return;
+	}
+	obj = obj["data"].toObject();
 	
 	
 	if(topic.name() == "ENROLL")
