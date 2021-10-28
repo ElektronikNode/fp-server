@@ -17,6 +17,9 @@ FpThread::FpThread(QObject *parent) : QThread(parent)
 	QSettings conf(CONFIG_FILE, QSettings::IniFormat, this);
 	MAX_FINGERS = uint16_t(conf.value("MAX_FINGERS", 1000).toInt());
 	ENROLL_TIMEOUT = conf.value("ENROLL_TIMEOUT", 600).toUInt();
+	DATABASE_NAME = conf.value("DATABASE_NAME", "minutiae").toString();
+	DATABASE_USER = conf.value("DATABASE_USER", "fp-server").toString();
+	DATABASE_PASSWD = conf.value("DATABASE_PASSWD", "DY50").toString();
 }
 
 
@@ -39,9 +42,9 @@ void FpThread::run()
 	// connect to database
 	QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
 	db.setHostName("localhost");
-	db.setDatabaseName("minutiae");
-	db.setUserName("fp-server");
-	db.setPassword("DY50");
+	db.setDatabaseName(DATABASE_NAME);
+	db.setUserName(DATABASE_USER);
+	db.setPassword(DATABASE_PASSWD);
 	bool ok = db.open();
 	if(ok)
 	{

@@ -39,6 +39,9 @@ private:
 	// configuration
 	uint16_t MAX_FINGERS;		// capacitiy of fingerprint library
 	uint32_t ENROLL_TIMEOUT;	// (seconds) timeout for enroll mode
+	QString DATABASE_NAME;		// name of database
+	QString DATABASE_USER;		// user name for database
+	QString DATABASE_PASSWD;	// password for database user
 };
 
 #endif // FPTHREAD_H
