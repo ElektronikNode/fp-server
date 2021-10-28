@@ -41,7 +41,7 @@ void FpThread::run()
 
 	// connect to database
 	QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-	db.setHostName("localhost");
+	db.setHostName("127.0.0.1");
 	db.setDatabaseName(DATABASE_NAME);
 	db.setUserName(DATABASE_USER);
 	db.setPassword(DATABASE_PASSWD);
